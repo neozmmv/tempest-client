@@ -8,6 +8,10 @@ h1, h2, h3 {
   color: white;
 }
 
+div {
+  color: white;
+}
+
 /* 
 .logo.vite:hover {
   filter: drop-shadow(0 0 2em #747bff);
