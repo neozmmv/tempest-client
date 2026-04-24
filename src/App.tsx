@@ -1,6 +1,7 @@
 import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/core";
+import axios from "axios";
 import "./App.css";
 
 export default function App() {
@@ -12,11 +13,28 @@ export default function App() {
     setGreetMsg(await invoke("greet", { name }));
   }
 
-  function sendMessage(event: React.SubmitEvent<HTMLFormElement>) {
+  type PostResponse = {
+    decrypted: string;
+    encrypted: string;
+    key: string;
+    received: string;
+  };
+
+  async function postMessage(message: string) {
+    // endpoint for rendezvous running locally (test)
+    const endpoint = "http://localhost:3000/api/post";
+    const response = await axios.post(endpoint, { message: message });
+    const msg = await response.data;
+    return msg;
+  }
+
+  async function sendMessage(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     const message = (event.target as any)[0].value;
     // alert just to check
     // alert(`Message sent: ${message}`);
+    const res: PostResponse = await postMessage(message);
+    alert(res.encrypted);
     event.target.reset();
   }
 
